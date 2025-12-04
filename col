@@ -1,0 +1,1570 @@
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Rain-Design/Libraries/main/Shaman/Library.lua'))()
+local Flags = Library.Flags
+
+local Window = Library:Window({
+    Text = "Vortex Hub. Made by Siggins"
+})
+
+-- Create Tabs
+local Tabs = {
+    Universal = Window:Tab({Text = "Universal"}),
+    Arsenal = Window:Tab({Text = "Arsenal"}),
+    MM2 = Window:Tab({Text = "Murder Mystery 2"}),
+    CombatWarriors = Window:Tab({Text = "Combat Warriors"}),
+    BladeBall = Window:Tab({Text = "Blade Ball"}),
+    Rivals = Window:Tab({Text = "Rivals"}),
+    BuildABoat = Window:Tab({Text = "Build A Boat"}),
+    ZombieAttack = Window:Tab({Text = "Zombie Attack"}),
+    BedWars = Window:Tab({Text = "Bed Wars"}),
+    NDS = Window:Tab({Text = "Natural Disaster"}),
+    MurdsVSSheriff = Window:Tab({Text = "Murderers VS Sheriffs"}),
+    BSS = Window:Tab({Text = "Bee Swarm Sim"}),
+    Doors = Window:Tab({Text = "Doors"}),
+    TSB = Window:Tab({Text = "TSB"}),
+    Tag = Window:Tab({Text = "Untitled Tag Game"}),
+    Settings = Window:Tab({Text = "Settings"})
+}
+
+-- Universal Tab
+local UniversalSection = Tabs.Universal:Section({Text = "Universal Scripts"})
+
+UniversalSection:Button({
+    Text = "Infinite Yield",
+    Tooltip = "Admin commands",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+    end
+})
+
+UniversalSection:Button({
+    Text = "Infinite Jump",
+    Tooltip = "Jump infinitely",
+    Callback = function()
+        _G.infinjump = not _G.infinjump
+        if _G.infinJumpStarted == nil then
+            _G.infinJumpStarted = true
+            local plr = game:GetService('Players').LocalPlayer
+            local m = plr:GetMouse()
+            m.KeyDown:connect(function(k)
+                if _G.infinjump then
+                    if k:byte() == 32 then
+                        humanoid = game:GetService'Players'.LocalPlayer.Character:FindFirstChildOfClass('Humanoid')
+                        humanoid:ChangeState('Jumping')
+                        wait()
+                        humanoid:ChangeState('Seated')
+                    end
+                end
+            end)
+        end
+    end
+})
+
+UniversalSection:Slider({
+    Text = "WalkSpeed",
+    Default = 16,
+    Minimum = 1,
+    Maximum = 500,
+    Flag = "WalkSpeed",
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    end
+})
+
+UniversalSection:Button({
+    Text = "Unnamed ESP",
+    Tooltip = "ESP for all players",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua'))()
+    end
+})
+
+UniversalSection:Button({
+    Text = "Sky Hub",
+    Tooltip = "Trolling GUI",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
+    end
+})
+
+UniversalSection:Button({
+    Text = "Fling All",
+    Tooltip = "Fling all players",
+    Callback = function()
+        local Targets = {"All"}
+        local Players = game:GetService("Players")
+        local Player = Players.LocalPlayer
+        local AllBool = false
+        
+        local GetPlayer = function(Name)
+            Name = Name:lower()
+            if Name == "all" or Name == "others" then
+                AllBool = true
+                return
+            elseif Name == "random" then
+                local GetPlayers = Players:GetPlayers()
+                if table.find(GetPlayers,Player) then table.remove(GetPlayers,table.find(GetPlayers,Player)) end
+                return GetPlayers[math.random(#GetPlayers)]
+            elseif Name ~= "random" and Name ~= "all" and Name ~= "others" then
+                for _,x in next, Players:GetPlayers() do
+                    if x ~= Player then
+                        if x.Name:lower():match("^"..Name) then
+                            return x;
+                        elseif x.DisplayName:lower():match("^"..Name) then
+                            return x;
+                        end
+                    end
+                end
+            else
+                return
+            end
+        end
+        
+        local SkidFling = function(TargetPlayer)
+            local Character = Player.Character
+            local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
+            local RootPart = Humanoid and Humanoid.RootPart
+            
+            if Character and Humanoid and RootPart then
+                if RootPart.Velocity.Magnitude < 50 then
+                    getgenv().OldPos = RootPart.CFrame
+                end
+                
+                workspace.FallenPartsDestroyHeight = 0/0
+                
+                local BV = Instance.new("BodyVelocity")
+                BV.Name = "EpixVel"
+                BV.Parent = RootPart
+                BV.Velocity = Vector3.new(9e8, 9e8, 9e8)
+                BV.MaxForce = Vector3.new(1/0, 1/0, 1/0)
+                
+                Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                
+                task.wait(2)
+                
+                BV:Destroy()
+                Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                workspace.CurrentCamera.CameraSubject = Humanoid
+            end
+        end
+        
+        if Targets[1] then for _,x in next, Targets do GetPlayer(x) end else return end
+        
+        if AllBool then
+            for _,x in next, Players:GetPlayers() do
+                SkidFling(x)
+            end
+        end
+    end
+})
+
+UniversalSection:Button({
+    Text = "Rejoin Game",
+    Tooltip = "Rejoin current server",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local TeleportService = game:GetService("TeleportService")
+        local player = Players.LocalPlayer
+        local gameId = game.PlaceId
+        TeleportService:Teleport(gameId, player)
+    end
+})
+
+UniversalSection:Button({
+    Text = "DEX Explorer",
+    Tooltip = "Game explorer",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+    end
+})
+
+UniversalSection:Button({
+    Text = "Backflip and Frontflip",
+    Tooltip = "FE flip animations (Z and X keys)",
+    Callback = function()
+        wait(5)
+        local FrontflipKey = Enum.KeyCode.Z
+        local BackflipKey = Enum.KeyCode.X
+        local ca = game:GetService("ContextActionService")
+        local zeezy = game:GetService("Players").LocalPlayer
+        local h = 0.0174533
+        
+        function zeezyFrontflip(act,inp,obj)
+            if inp == Enum.UserInputState.Begin then
+                zeezy.Character.Humanoid:ChangeState("Jumping")
+                wait()
+                zeezy.Character.Humanoid.Sit = true
+                for i = 1,360 do 
+                    delay(i/720,function()
+                        zeezy.Character.Humanoid.Sit = true
+                        zeezy.Character.HumanoidRootPart.CFrame = zeezy.Character.HumanoidRootPart.CFrame * CFrame.Angles(-h,0,0)
+                    end)
+                end
+                wait(0.55)
+                zeezy.Character.Humanoid.Sit = false
+            end
+        end
+        
+        function zeezyBackflip(act,inp,obj)
+            if inp == Enum.UserInputState.Begin then
+                zeezy.Character.Humanoid:ChangeState("Jumping")
+                wait()
+                zeezy.Character.Humanoid.Sit = true
+                for i = 1,360 do
+                    delay(i/720,function()
+                        zeezy.Character.Humanoid.Sit = true
+                        zeezy.Character.HumanoidRootPart.CFrame = zeezy.Character.HumanoidRootPart.CFrame * CFrame.Angles(h,0,0)
+                    end)
+                end
+                wait(0.55)
+                zeezy.Character.Humanoid.Sit = false
+            end
+        end
+        
+        ca:BindAction("zeezyFrontflip",zeezyFrontflip,false,FrontflipKey)
+        ca:BindAction("zeezyBackflip",zeezyBackflip,false,BackflipKey)
+    end
+})
+
+UniversalSection:Button({
+    Text = "RTX V2",
+    Tooltip = "Graphics enhancement",
+    Callback = function()
+        local Lighting = game:GetService("Lighting")
+        Lighting.Brightness = 1.9
+        Lighting.GlobalShadows = true
+        
+        local bloom = Instance.new("BloomEffect", Lighting)
+        bloom.Intensity = 0.7
+        bloom.Size = 64
+        bloom.Threshold = 2.5
+        
+        local atmo = Instance.new("Atmosphere", Lighting)
+        atmo.Density = 0.28
+        atmo.Offset = 0.15
+    end
+})
+
+local UniversalSection2 = Tabs.Universal:Section({Text = "Animations"})
+
+local UniversalSection3 = Tabs.Universal:Section({Text = "Character Mods"})
+
+UniversalSection3:Slider({
+    Text = "Jump Power",
+    Default = 50,
+    Minimum = 50,
+    Maximum = 500,
+    Callback = function(Value)
+        local character = game.Players.LocalPlayer.Character
+        if character and character:FindFirstChildOfClass("Humanoid") then
+            character:FindFirstChildOfClass("Humanoid").JumpPower = Value
+            character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
+        end
+    end
+})
+
+UniversalSection3:Slider({
+    Text = "Gravity",
+    Default = 196.2,
+    Minimum = 0,
+    Maximum = 500,
+    Callback = function(Value)
+        game.Workspace.Gravity = Value
+    end
+})
+
+UniversalSection3:Toggle({
+    Text = "Fullbright",
+    Callback = function(state)
+        local Lighting = game:GetService("Lighting")
+        if state then
+            _G.FullbrightEnabled = true
+            Lighting.Brightness = 2
+            Lighting.ClockTime = 14
+            Lighting.FogEnd = 100000
+            Lighting.GlobalShadows = false
+            Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+        else
+            _G.FullbrightEnabled = false
+            Lighting.Brightness = 1
+            Lighting.ClockTime = 12
+            Lighting.FogEnd = 100000
+            Lighting.GlobalShadows = true
+            Lighting.OutdoorAmbient = Color3.fromRGB(70, 70, 70)
+        end
+    end
+})
+
+UniversalSection3:Toggle({
+    Text = "Spinbot",
+    Callback = function(state)
+        _G.Spinbot = state
+        if state then
+            spawn(function()
+                while _G.Spinbot do
+                    local character = game.Players.LocalPlayer.Character
+                    if character and character:FindFirstChild("HumanoidRootPart") then
+                        character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(20), 0)
+                    end
+                    wait(0.05)
+                end
+            end)
+        end
+    end
+})
+
+local UniversalSection4 = Tabs.Universal:Section({Text = "Protection"})
+
+UniversalSection4:Toggle({
+    Text = "Anti-Fling",
+    Callback = function(state)
+        if state then
+            _G.AntiFling = true
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            
+            for _, part in pairs(character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                    part.Massless = true
+                end
+            end
+            
+            character.DescendantAdded:Connect(function(part)
+                if _G.AntiFling and part:IsA("BasePart") then
+                    part.CanCollide = false
+                    part.Massless = true
+                end
+            end)
+        else
+            _G.AntiFling = false
+        end
+    end
+})
+
+UniversalSection4:Toggle({
+    Text = "Anti-Void",
+    Callback = function(state)
+        _G.AntiVoid = state
+        if state then
+            spawn(function()
+                while _G.AntiVoid do
+                    local character = game.Players.LocalPlayer.Character
+                    if character and character:FindFirstChild("HumanoidRootPart") then
+                        local hrp = character.HumanoidRootPart
+                        if hrp.Position.Y < -50 then
+                            hrp.CFrame = CFrame.new(hrp.Position.X, 100, hrp.Position.Z)
+                            print("Anti-Void: Saved from falling!")
+                        end
+                    end
+                    wait(0.1)
+                end
+            end)
+        end
+    end
+})
+
+UniversalSection4:Toggle({
+    Text = "Anti-Slowdown",
+    Callback = function(state)
+        _G.AntiSlowdown = state
+        if state then
+            spawn(function()
+                while _G.AntiSlowdown do
+                    local character = game.Players.LocalPlayer.Character
+                    if character and character:FindFirstChildOfClass("Humanoid") then
+                        local humanoid = character:FindFirstChildOfClass("Humanoid")
+                        -- Remove speed debuffs
+                        for _, effect in pairs(humanoid:GetChildren()) do
+                            if effect:IsA("NumberValue") and effect.Name == "SpeedDebuff" then
+                                effect:Destroy()
+                            end
+                        end
+                    end
+                    wait(0.5)
+                end
+            end)
+        end
+    end
+})
+
+UniversalSection2:Button({
+    Text = "Fe Yeet Gui",
+    Tooltip = "Yeet players",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/YEET_GUI_CODE"))()
+    end
+})
+
+UniversalSection2:Button({
+    Text = "Jork it R6",
+    Tooltip = "Animation for R6",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+    end
+})
+
+UniversalSection2:Button({
+    Text = "Jork it R15",
+    Tooltip = "Animation for R15",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+    end
+})
+
+UniversalSection2:Button({
+    Text = "Bang GUI",
+    Tooltip = "Animation GUI",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/BANG_GUI_CODE"))()
+    end
+})
+
+-- Arsenal Tab
+local ArsenalSection = Tabs.Arsenal:Section({Text = "Arsenal Scripts"})
+
+
+
+ArsenalSection:Button({
+    Text = "Private script",
+    Tooltip = "Use Z and V keys",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/scriptVholder/ars/refs/heads/main/ah"))()
+    end
+})
+
+ArsenalSection:Button({
+    Text = "DMON",
+    Tooltip = "HOLY SHIT THIS IS GOOD",
+    Callback = function()
+        loadstring(game:HttpGet("http://dmonmods.xyz/loader.txt"))()
+    end
+})
+
+ArsenalSection:Button({
+    Text = "Z3US",
+    Tooltip = "big ui, still good",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/blackowl1231/Z3US/refs/heads/main/main.lua"))()
+    end
+})
+
+ArsenalSection:Button({
+    Text = "Timmy Hub",
+    Tooltip = "decent, bad esp otherwise good",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/WinzeTim/timmyhack2/refs/heads/main/arsenal.lua'))()
+    end
+})
+
+local MM2Section = Tabs.MM2:Section({Text = "Murder Mystery 2 Scripts"})
+
+MM2Section:Button({
+    Text = "Vynixu",
+    Tooltip = "old but gold",
+    Callback = function()
+        loadstring(game:GetObjects("rbxassetid://4001118261")[1].Source)()
+    end
+})
+
+MM2Section:Button({
+    Text = "Vertex",
+    Tooltip = "MM2 hub",
+    Callback = function()
+        loadstring(game:HttpGet('https://pastefy.app/CaSiAUXu/raw'))()
+    end
+})
+
+-- Combat Warriors Tab
+local CombatWarriorsSection = Tabs.CombatWarriors:Section({Text = "Combat Warriors Scripts"})
+
+CombatWarriorsSection:Button({
+    Text = "Head Hitbox Expander",
+    Tooltip = "Expands head hitboxes",
+    Callback = function()
+        _G.HeadSize = 10
+        _G.Disabled = true
+        game:GetService('RunService').RenderStepped:connect(function()
+            if _G.Disabled then
+                for i,v in next, game:GetService('Players'):GetPlayers() do
+                    if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+                        pcall(function()
+                            v.Character.Head.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+                            v.Character.Head.Transparency = 1
+                            v.Character.Head.BrickColor = BrickColor.new("Red")
+                            v.Character.Head.Material = "Neon"
+                            v.Character.Head.CanCollide = false
+                            v.Character.Head.Massless = true
+                        end)
+                    end
+                end
+            end
+        end)
+    end
+})
+
+CombatWarriorsSection:Button({
+    Text = "Bad Aimbot",
+    Tooltip = "TERRIBLE aimbot",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/utHyEcbk"))()
+    end
+})
+
+CombatWarriorsSection:Button({
+    Text = "Money Hub",
+    Tooltip = "Combat Warriors hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/MONEY_HUB_CODE"))()
+    end
+})
+
+CombatWarriorsSection:Button({
+    Text = "Zygarde",
+    Tooltip = "Combat Warriors hub",
+    Callback = function()
+        script_key = "KEY"
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/75bb2b71fc6c51bcc92c77290a2537a7.lua"))()
+    end
+})
+
+-- Blade Ball Tab
+local BladeBallSection = Tabs.BladeBall:Section({Text = "Blade Ball Scripts"})
+
+BladeBallSection:Button({
+    Text = "Soluna",
+    Tooltip = "Personal Favorite",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/endoverdosing/Soluna-API/refs/heads/main/bladeball.lua",true))()
+    end
+})
+
+BladeBallSection:Button({
+    Text = "Triple Hub Keyless",
+    Tooltip = "No key required",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/2FtphmKi"))()
+    end
+})
+
+-- Build A Boat Tab
+local BuildABoatSection = Tabs.BuildABoat:Section({Text = "Build A Boat Scripts"})
+
+BuildABoatSection:Button({
+    Text = "Quartyz X Mukuro Hub",
+    Tooltip = "BABFT hub",
+    Callback = function()
+        loadstring(game:HttpGet"https://raw.githubusercontent.com/xQuartyx/DonateMe/main/BABFT")()
+    end
+})
+
+BuildABoatSection:Button({
+    Text = "Zeerox Hub",
+    Tooltip = "BABFT hub",
+    Callback = function()
+        loadstring(game:HttpGet'https://raw.githubusercontent.com/RunDTM/ZeeroxHub/main/Loader.lua')()
+    end
+})
+
+BuildABoatSection:Button({
+    Text = "Ski Hub",
+    Tooltip = "BABFT hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Yousuck780/Build-A-Boat-For-Treasure/main/Build%20A%20Boat%20For%20Treasure", true))()
+    end
+})
+
+BuildABoatSection:Button({
+    Text = "Unique Hub",
+    Tooltip = "Multi-game hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://scriptblox.com/raw/Unique-Hub-(14-Gmes)_521"))()
+    end
+})
+
+local RivalsSection = Tabs.Rivals:Section({Text = "Rivals Scripts"})
+
+RivalsSection:Button({
+    Text = "Vortex Aimbot",
+    Tooltip = "this is cool",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/scriptVholder/vort/refs/heads/main/voltwillexitscam"))()
+    end
+})
+
+RivalsSection:Button({
+    Text = "Z3US",
+    Tooltip = "GOOD",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/blackowl1231/Z3US/refs/heads/main/main.lua"))()
+    end
+})
+
+local ZombieAttackSection = Tabs.ZombieAttack:Section({Text = "Zombie Attack Scripts"})
+
+ZombieAttackSection:Button({
+    Text = "Voidz Hub",
+    Tooltip = "Zombie Attack hub",
+    Callback = function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/RTrade/Voidz/main/Games.lua'),true))()
+    end
+})
+
+ZombieAttackSection:Button({
+    Text = "Void Hub",
+    Tooltip = "Zombie Attack hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/VoidzyScripter/VoidHub-/main/Source%20Code"))()
+    end
+})
+
+ZombieAttackSection:Button({
+    Text = "Head Hitbox Manager",
+    Tooltip = "Manage hitboxes",
+    Callback = function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/xSyon/ZombieAttack/main/engine.lua'),true))()
+    end
+})
+
+-- Bed Wars Tab
+local BedWarsSection = Tabs.BedWars:Section({Text = "Bed Wars Scripts"})
+
+BedWarsSection:Button({
+    Text = "Aurora Hub",
+    Tooltip = "Bed Wars hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/cocotv666/Aurora/main/Aurora_Loader"))()
+    end
+})
+
+BedWarsSection:Button({
+    Text = "CocoKiwi",
+    Tooltip = "Bed Wars hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/QP-Community/Roblox/main/CoCoPaste"))()
+    end
+})
+
+-- Natural Disaster Tab
+local NDSSection = Tabs.NDS:Section({Text = "Natural Disaster Survival"})
+
+NDSSection:Button({
+    Text = "Livers Hub",
+    Tooltip = "NDS hub",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/LiverMods/Rawnder-NTDR/main/NaturalDisaster'))()
+    end
+})
+
+NDSSection:Button({
+    Text = "NDS Gui",
+    Tooltip = "NDS GUI",
+    Callback = function()
+        loadstring(game:HttpGet('https://pastebin.com/raw/GzpzTGNN'))()
+    end
+})
+
+-- Murderers VS Sheriffs Tab
+local MurdsVSSheriffSection = Tabs.MurdsVSSheriff:Section({Text = "Murderers VS Sheriffs"})
+
+MurdsVSSheriffSection:Button({
+    Text = "HitBox Manager",
+    Tooltip = "Hitbox expander",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Vcsk/RobloxScripts/main/HitboxExpander.lua"))()
+    end
+})
+
+-- Bee Swarm Simulator Tab
+local BSSSection = Tabs.BSS:Section({Text = "Bee Swarm Simulator"})
+
+BSSSection:Button({
+    Text = "Skid Vortex Hub",
+    Tooltip = "BSS hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Vortex3775/Vortex/main/Vortex%20hub"))()
+    end
+})
+
+BSSSection:Button({
+    Text = "Histy Hub",
+    Tooltip = "BSS hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/scriptpastebin/raw/main/Histy"))()
+    end
+})
+
+-- Doors Tab
+local DoorsSection = Tabs.Doors:Section({Text = "Doors Scripts"})
+
+DoorsSection:Button({
+    Text = "Doors Hub",
+    Tooltip = "Doors hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/M4mpGErb",true))()
+    end
+})
+
+DoorsSection:Button({
+    Text = "MS Paint",
+    Tooltip = "Doors hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/002c19202c9946e6047b0c6e0ad51f84.lua"))()
+    end
+})
+
+-- TSB Tab
+local TSBSection = Tabs.TSB:Section({Text = "The Strongest Battlegrounds"})
+
+TSBSection:Label({
+    Text = "USE AN ALT OR GET BANNED!",
+    Color = Color3.fromRGB(255, 100, 100)
+})
+
+TSBSection:Button({
+    Text = "Twi-Ware",
+    Tooltip = "TSB hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/1emcuiFz/raw",true))()
+    end
+})
+
+TSBSection:Button({
+    Text = "Aquarius Hub",
+    Tooltip = "TSB hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://rentry.org/aquarius-hub/raw"))()
+    end
+})
+
+TSBSection:Button({
+    Text = "Ray Makk Hub",
+    Tooltip = "TSB hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/JayXSama/ray-makk/main/The%20Strongest%20Battlegrounds"))()
+    end
+})
+
+TSBSection:Button({
+    Text = "Kade Hub",
+    Tooltip = "TSB hub",
+    Callback = function()
+        getgenv().DisableWarning = true
+        getgenv().AutoReport = true
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletfan2007/KadeHubRepository/main/Latest.lua"))()
+    end
+})
+
+TSBSection:Button({
+    Text = "Gooner Hub",
+    Tooltip = "TSB hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Mikasuru/Arc/refs/heads/main/Arc.lua"))()
+    end
+})
+
+TSBSection:Button({
+    Text = "XDev Hub",
+    Tooltip = "TSB hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Emerson2-creator/Scripts-Roblox/refs/heads/main/XDevHubBeta.lua"))()
+    end
+})
+
+-- Untitled Tag Game Tab
+local TagSection = Tabs.Tag:Section({Text = "Untitled Tag Game"})
+
+TagSection:Label({
+    Text = "is that a utg reference?!?!?",
+    Color = Color3.fromRGB(150, 200, 255)
+})
+
+TagSection:Button({
+    Text = "Skibidi Toilet",
+    Tooltip = "UTG script",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Vortex3775/DUMBSTUPID/main/even%20stupider", true))()
+    end
+})
+
+-- Select first tab
+Tabs.Universal:Select()
+
+-- Settings Tab
+local ThemeSection = Tabs.Settings:Section({Text = "Theme Settings"})
+local ConfigSection = Tabs.Settings:Section({Text = "Config Management"})
+local AntiCheatSection = Tabs.Settings:Section({Text = "Anti-Cheat Detector"})
+local MiscSettingsSection = Tabs.Settings:Section({Text = "Misc Settings"})
+
+-- Theme Settings
+local UILibrary = nil
+local MainFrame = nil
+
+-- Find the library's main frame
+for _, obj in pairs(game:GetService("CoreGui"):GetDescendants()) do
+    if obj.Name == "Shaman" or (obj:IsA("ScreenGui") and obj:FindFirstChild("Main")) then
+        MainFrame = obj:FindFirstChild("Main") or obj
+        break
+    end
+end
+
+ThemeSection:Dropdown({
+    Text = "Theme Color",
+    List = {"Blue", "Red", "Green", "Purple", "Orange", "Pink", "Cyan", "Yellow"},
+    Callback = function(v)
+        local colors = {
+            Blue = Color3.fromRGB(0, 150, 255),
+            Red = Color3.fromRGB(255, 50, 50),
+            Green = Color3.fromRGB(50, 255, 100),
+            Purple = Color3.fromRGB(150, 50, 255),
+            Orange = Color3.fromRGB(255, 150, 50),
+            Pink = Color3.fromRGB(255, 100, 200),
+            Cyan = Color3.fromRGB(50, 200, 255),
+            Yellow = Color3.fromRGB(255, 220, 50)
+        }
+        
+        local selectedColor = colors[v] or colors.Blue
+        
+        if MainFrame then
+            for _, obj in pairs(MainFrame:GetDescendants()) do
+                if obj:IsA("Frame") or obj:IsA("TextButton") or obj:IsA("TextLabel") then
+                    if obj.BorderColor3 then
+                        obj.BorderColor3 = selectedColor
+                    end
+                    if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+                        -- Never set to gray
+                        if obj.Name ~= "Title" and obj.TextColor3 ~= Color3.fromRGB(255, 255, 255) then
+                            obj.TextColor3 = selectedColor
+                        end
+                    end
+                    -- Ensure backgrounds are never gray
+                    if obj.BackgroundColor3 == Color3.fromRGB(128, 128, 128) then
+                        obj.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                    end
+                end
+                if obj:IsA("UIStroke") then
+                    obj.Color = selectedColor
+                end
+            end
+        end
+    end
+})
+
+ThemeSection:Toggle({
+    Text = "Auto-Save Theme",
+    Tooltip = "Automatically save theme preferences",
+    Callback = function(state)
+        _G.AutoSaveTheme = state
+        if state then
+            print("Theme auto-save enabled!")
+        else
+            print("Theme auto-save disabled!")
+        end
+    end
+})
+
+-- Config Management
+local ConfigName = ""
+
+ConfigSection:Button({
+    Text = "Save Config",
+    Tooltip = "Save current settings (use default name)",
+    Callback = function()
+        ConfigName = "VortexConfig_" .. tostring(os.time())
+        
+        local config = {}
+        for flag, value in pairs(Flags) do
+            config[flag] = value
+        end
+        
+        local success, err = pcall(function()
+            writefile(ConfigName..".txt", game:GetService("HttpService"):JSONEncode(config))
+        end)
+        
+        if success then
+            print("Config saved: " .. ConfigName)
+        else
+            warn("Failed to save config: " .. tostring(err))
+        end
+    end
+})
+
+ConfigSection:Button({
+    Text = "Load Latest Config",
+    Tooltip = "Load most recent saved settings",
+    Callback = function()
+        local files = {}
+        local success = pcall(function()
+            files = listfiles()
+        end)
+        
+        if success and #files > 0 then
+            for _, file in pairs(files) do
+                if file:find("VortexConfig_") and file:find(".txt") then
+                    local content = readfile(file)
+                    local config = game:GetService("HttpService"):JSONDecode(content)
+                    for flag, value in pairs(config) do
+                        Flags[flag] = value
+                    end
+                    print("Config loaded: " .. file)
+                    return
+                end
+            end
+            warn("No config files found")
+        else
+            warn("Failed to load config")
+        end
+    end
+})
+
+-- Anti-Cheat Detector
+local ACLabel = AntiCheatSection:Label({
+    Text = "Click 'Scan' to detect anti-cheat",
+    Color = Color3.fromRGB(255, 255, 100)
+})
+
+local function detectAntiCheat()
+    local score = 0
+    local maxScore = 100
+    local detections = {}
+    
+    -- Whitelist of common Roblox objects to ignore
+    local whitelist = {
+        "rbxcharactersounds", "rbxanimations", "rbxinternal", "humanoid", "animate",
+        "health", "control", "camerascript", "playergui", "backpack", "starter"
+    }
+    
+    local function isWhitelisted(name)
+        local lower = name:lower()
+        for _, whitelisted in pairs(whitelist) do
+            if lower:find(whitelisted) then
+                return true
+            end
+        end
+        return false
+    end
+    
+    -- Check for common anti-cheat script names (High priority)
+    local acScriptNames = {"anticheat", "anti_cheat", "antikick", "antiexploit", "cheatdetect", "exploitcheck"}
+    for _, obj in pairs(game:GetDescendants()) do
+        if obj:IsA("LocalScript") or obj:IsA("Script") or obj:IsA("ModuleScript") then
+            local name = obj.Name:lower()
+            if not isWhitelisted(name) then
+                for _, acName in pairs(acScriptNames) do
+                    if name == acName or name:find("^" .. acName) then
+                        score = score + 20
+                        table.insert(detections, "AC Script: " .. obj.Name .. " in " .. obj.Parent.Name)
+                        break
+                    end
+                end
+            end
+        end
+    end
+    
+    -- Check for anti-cheat folders/services
+    local suspiciousPaths = {
+        game:GetService("ReplicatedStorage"),
+        game:GetService("ReplicatedFirst"),
+        game.Workspace
+    }
+    
+    for _, location in pairs(suspiciousPaths) do
+        local success = pcall(function()
+            for _, obj in pairs(location:GetChildren()) do
+                local name = obj.Name:lower()
+                if not isWhitelisted(name) then
+                    if name:find("anticheat") or name:find("anti%-cheat") or name:find("security") and name:find("system") then
+                        score = score + 15
+                        table.insert(detections, "AC Folder: " .. obj.Name .. " in " .. location.Name)
+                    end
+                end
+            end
+        end)
+    end
+    
+    -- Check RemoteEvent/Function with suspicious names only
+    local suspiciousRemotes = 0
+    local suspiciousNames = {"flag", "report", "log", "ban", "kick", "detect", "check", "verify"}
+    for _, obj in pairs(game:GetDescendants()) do
+        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
+            local name = obj.Name:lower()
+            if not isWhitelisted(name) then
+                for _, susName in pairs(suspiciousNames) do
+                    if name:find(susName) then
+                        suspiciousRemotes = suspiciousRemotes + 1
+                        table.insert(detections, "Suspicious Remote: " .. obj.Name)
+                        break
+                    end
+                end
+            end
+        end
+    end
+    
+    if suspiciousRemotes > 5 then
+        score = score + 20
+        table.insert(detections, "Multiple suspicious remotes: " .. suspiciousRemotes)
+    elseif suspiciousRemotes > 2 then
+        score = score + 10
+    end
+    
+    -- Check for speed/position monitoring
+    for _, obj in pairs(game:GetDescendants()) do
+        if obj:IsA("Script") or obj:IsA("LocalScript") then
+            local success, source = pcall(function() return obj.Source end)
+            if success and source and #source > 100 then
+                local lower = source:lower()
+                local hasSpeedCheck = lower:find("walkspeed") and (lower:find("kick") or lower:find("ban"))
+                local hasPosCheck = lower:find("magnitude") and lower:find("rootpart") and (lower:find("kick") or lower:find("ban"))
+                
+                if hasSpeedCheck or hasPosCheck then
+                    score = score + 25
+                    table.insert(detections, "Movement monitoring in: " .. obj.Name)
+                    break
+                end
+            end
+        end
+    end
+    
+    -- Check for popular anti-cheat systems
+    local knownACs = {
+        {name = "Adonis", score = 30},
+        {name = "BasicAdmin", score = 15},
+        {name = "Sentinel", score = 35},
+        {name = "Proton", score = 30},
+        {name = "Deflect", score = 35}
+    }
+    
+    for _, ac in pairs(knownACs) do
+        for _, obj in pairs(game:GetDescendants()) do
+            if obj.Name == ac.name or (obj.Name:lower():find(ac.name:lower()) and not isWhitelisted(obj.Name)) then
+                score = score + ac.score
+                table.insert(detections, "Known AC System: " .. ac.name)
+                break
+            end
+        end
+    end
+    
+    -- Cap at 100%
+    score = math.min(score, maxScore)
+    
+    -- Determine color and status
+    local color = Color3.fromRGB(100, 255, 100) -- Green (Safe)
+    local status = "Safe - Low detection risk"
+    
+    if score >= 20 and score < 40 then
+        color = Color3.fromRGB(150, 255, 100) -- Light green
+        status = "Mostly Safe - Minor detection"
+    elseif score >= 40 and score < 60 then
+        color = Color3.fromRGB(255, 255, 100) -- Yellow
+        status = "Moderate - Use with caution"
+    elseif score >= 60 and score < 80 then
+        color = Color3.fromRGB(255, 180, 50) -- Orange
+        status = "High Risk - Be careful"
+    elseif score >= 80 then
+        color = Color3.fromRGB(255, 50, 50) -- Red
+        status = "EXTREME RISK - Avoid cheating!"
+    end
+    
+    local statusText = "Anti-Cheat Strength: " .. score .. "%\n" .. status
+    
+    ACLabel:Set({
+        Text = statusText,
+        Color = color
+    })
+    
+    print("=== Anti-Cheat Scan Results ===")
+    print("Score: " .. score .. "%")
+    print("Status: " .. status)
+    print("Detections found: " .. #detections)
+    for i, detection in ipairs(detections) do
+        print(i .. ". " .. detection)
+    end
+    print("================================")
+end
+
+AntiCheatSection:Button({
+    Text = "Scan Anti-Cheat",
+    Tooltip = "Detect game anti-cheat",
+    Callback = function()
+        detectAntiCheat()
+    end
+})
+
+AntiCheatSection:Toggle({
+    Text = "Auto-Scan on Join",
+    Callback = function(state)
+        if state then
+            detectAntiCheat()
+        end
+    end
+})
+
+-- Misc Settings
+MiscSettingsSection:Toggle({
+    Text = "FPS Counter",
+    Callback = function(state)
+        if state then
+            _G.ShowFPS = true
+            local fpsLabel = Instance.new("TextLabel")
+            fpsLabel.Name = "FPSCounter"
+            fpsLabel.Parent = game:GetService("CoreGui"):WaitForChild("RobloxGui")
+            fpsLabel.Size = UDim2.new(0, 100, 0, 30)
+            fpsLabel.Position = UDim2.new(1, -110, 0, 10)
+            fpsLabel.BackgroundTransparency = 0.5
+            fpsLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            fpsLabel.Font = Enum.Font.Code
+            fpsLabel.TextSize = 18
+            
+            spawn(function()
+                while _G.ShowFPS do
+                    local fps = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
+                    fpsLabel.Text = "FPS: " .. fps
+                    wait(0.5)
+                end
+            end)
+        else
+            _G.ShowFPS = false
+            local fpsLabel = game:GetService("CoreGui"):WaitForChild("RobloxGui"):FindFirstChild("FPSCounter")
+            if fpsLabel then
+                fpsLabel:Destroy()
+            end
+        end
+    end
+})
+
+MiscSettingsSection:Toggle({
+    Text = "Ping Display",
+    Callback = function(state)
+        if state then
+            _G.ShowPing = true
+            local pingLabel = Instance.new("TextLabel")
+            pingLabel.Name = "PingCounter"
+            pingLabel.Parent = game:GetService("CoreGui"):WaitForChild("RobloxGui")
+            pingLabel.Size = UDim2.new(0, 100, 0, 30)
+            pingLabel.Position = UDim2.new(1, -110, 0, 45)
+            pingLabel.BackgroundTransparency = 0.5
+            pingLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            pingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            pingLabel.Font = Enum.Font.Code
+            pingLabel.TextSize = 18
+            
+            spawn(function()
+                while _G.ShowPing do
+                    local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+                    pingLabel.Text = "Ping: " .. ping
+                    wait(0.5)
+                end
+            end)
+        else
+            _G.ShowPing = false
+            local pingLabel = game:GetService("CoreGui"):WaitForChild("RobloxGui"):FindFirstChild("PingCounter")
+            if pingLabel then
+                pingLabel:Destroy()
+            end
+        end
+    end
+})
+
+MiscSettingsSection:Toggle({
+    Text = "Performance Mode",
+    Tooltip = "Reduce graphics for better FPS",
+    Callback = function(state)
+        local lighting = game:GetService("Lighting")
+        if state then
+            settings().Rendering.QualityLevel = 1
+            lighting.GlobalShadows = false
+            lighting.FogEnd = 9e9
+            
+            for _, obj in pairs(game.Workspace:GetDescendants()) do
+                if obj:IsA("ParticleEmitter") or obj:IsA("Trail") then
+                    obj.Enabled = false
+                end
+                if obj:IsA("Explosion") then
+                    obj.BlastPressure = 1
+                    obj.BlastRadius = 1
+                end
+            end
+        else
+            settings().Rendering.QualityLevel = Enum.QualityLevel.Automatic
+            lighting.GlobalShadows = true
+        end
+    end
+})
+
+MiscSettingsSection:Button({
+    Text = "Anti-AFK",
+    Tooltip = "Prevent being kicked for idling",
+    Callback = function()
+        local vu = game:GetService("VirtualUser")
+        game:GetService("Players").LocalPlayer.Idled:connect(function()
+            vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            wait(1)
+            vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        end)
+        print("Anti-AFK enabled!")
+    end
+})
+
+MiscSettingsSection:Slider({
+    Text = "FOV Changer",
+    Default = 70,
+    Minimum = 30,
+    Maximum = 120,
+    Flag = "FOVSlider",
+    Callback = function(Value)
+        game.Workspace.CurrentCamera.FieldOfView = Value
+    end
+})
+
+-- Server Info Section
+local ServerInfoSection = Tabs.Settings:Section({Text = "Server Information"})
+
+local ServerInfoLabel = ServerInfoSection:Label({
+    Text = "Loading server info...",
+    Color = Color3.fromRGB(100, 200, 255)
+})
+
+ServerInfoSection:Button({
+    Text = "Refresh Server Info",
+    Tooltip = "Update server information",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local Stats = game:GetService("Stats")
+        
+        local playerCount = #Players:GetPlayers()
+        local maxPlayers = Players.MaxPlayers
+        local ping = Stats.Network.ServerStatsItem["Data Ping"]:GetValueString()
+        local jobId = game.JobId
+        local placeId = game.PlaceId
+        
+        local infoText = string.format(
+            "Players: %d/%d\nPing: %s\nPlace ID: %s\nJob ID: %s",
+            playerCount, maxPlayers, ping, placeId, jobId:sub(1, 8) .. "..."
+        )
+        
+        ServerInfoLabel:Set({
+            Text = infoText,
+            Color = Color3.fromRGB(100, 255, 100)
+        })
+    end
+})
+
+ServerInfoSection:Dropdown({
+    Text = "Teleport to Player",
+    List = {},
+    Callback = function(playerName)
+        local targetPlayer = game.Players:FindFirstChild(playerName)
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local localPlayer = game.Players.LocalPlayer
+            if localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                localPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+                print("Teleported to " .. playerName)
+            end
+        end
+    end
+})
+
+-- Update player list for dropdown
+spawn(function()
+    while wait(5) do
+        local playerList = {}
+        for _, player in pairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer then
+                table.insert(playerList, player.Name)
+            end
+        end
+        -- Note: Dropdown refresh might not work in Shaman, this is a placeholder
+    end
+end)
+
+-- Exploit Detector Section
+local ExploitDetectorSection = Tabs.Settings:Section({Text = "Exploit Detector"})
+
+local ExploitLabel = ExploitDetectorSection:Label({
+    Text = "Click 'Scan' to detect exploiters",
+    Color = Color3.fromRGB(255, 200, 100)
+})
+
+ExploitDetectorSection:Button({
+    Text = "Scan for Exploiters",
+    Tooltip = "Detect suspicious players",
+    Callback = function()
+        local suspiciousPlayers = {}
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+                
+                if humanoid and hrp then
+                    -- Check for suspicious speed
+                    if humanoid.WalkSpeed > 50 then
+                        table.insert(suspiciousPlayers, player.Name .. " (High Speed)")
+                    end
+                    
+                    -- Check for suspicious jump
+                    if humanoid.JumpPower > 100 or humanoid.JumpHeight > 15 then
+                        table.insert(suspiciousPlayers, player.Name .. " (High Jump)")
+                    end
+                    
+                    -- Check for flying (velocity check)
+                    if hrp.AssemblyLinearVelocity.Y > 50 and humanoid:GetState() ~= Enum.HumanoidStateType.Freefall then
+                        table.insert(suspiciousPlayers, player.Name .. " (Flying)")
+                    end
+                end
+            end
+        end
+        
+        if #suspiciousPlayers > 0 then
+            local resultText = "⚠️ Suspicious Players:\n" .. table.concat(suspiciousPlayers, "\n")
+            ExploitLabel:Set({
+                Text = resultText,
+                Color = Color3.fromRGB(255, 100, 100)
+            })
+            print("=== Exploit Scan Results ===")
+            for _, sus in ipairs(suspiciousPlayers) do
+                print(sus)
+            end
+        else
+            ExploitLabel:Set({
+                Text = "✅ No suspicious players detected",
+                Color = Color3.fromRGB(100, 255, 100)
+            })
+        end
+    end
+})
+
+-- Fun Features Section
+local FunSection = Tabs.Settings:Section({Text = "Fun Features"})
+
+FunSection:Toggle({
+    Text = "Fake Lag",
+    Tooltip = "Make it look like you're lagging",
+    Callback = function(state)
+        _G.FakeLag = state
+        if state then
+            spawn(function()
+                while _G.FakeLag do
+                    local character = game.Players.LocalPlayer.Character
+                    if character and character:FindFirstChild("HumanoidRootPart") then
+                        local hrp = character.HumanoidRootPart
+                        local oldPos = hrp.CFrame
+                        wait(math.random(1, 3))
+                        if _G.FakeLag then
+                            hrp.CFrame = oldPos
+                        end
+                    end
+                    wait(0.1)
+                end
+            end)
+        end
+    end
+})
+
+FunSection:Button({
+    Text = "Remove Textures",
+    Tooltip = "Remove all textures for FPS boost",
+    Callback = function()
+        for _, obj in pairs(game.Workspace:GetDescendants()) do
+            if obj:IsA("Decal") or obj:IsA("Texture") then
+                obj.Transparency = 1
+            end
+            if obj:IsA("BasePart") then
+                obj.Material = Enum.Material.SmoothPlastic
+            end
+        end
+        print("Textures removed!")
+    end
+})
+
+MiscSettingsSection:Toggle({
+    Text = "FPS Counter",
+    Callback = function(state)
+        if state then
+            _G.ShowFPS = true
+            local fpsLabel = Instance.new("TextLabel")
+            fpsLabel.Name = "FPSCounter"
+            fpsLabel.Parent = game:GetService("CoreGui"):WaitForChild("RobloxGui")
+            fpsLabel.Size = UDim2.new(0, 100, 0, 30)
+            fpsLabel.Position = UDim2.new(1, -110, 0, 10)
+            fpsLabel.BackgroundTransparency = 0.5
+            fpsLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            fpsLabel.Font = Enum.Font.Code
+            fpsLabel.TextSize = 18
+            
+            spawn(function()
+                while _G.ShowFPS do
+                    local fps = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
+                    fpsLabel.Text = "FPS: " .. fps
+                    wait(0.5)
+                end
+            end)
+        else
+            _G.ShowFPS = false
+            local fpsLabel = game:GetService("CoreGui"):WaitForChild("RobloxGui"):FindFirstChild("FPSCounter")
+            if fpsLabel then
+                fpsLabel:Destroy()
+            end
+        end
+    end
+})
+
+MiscSettingsSection:Toggle({
+    Text = "Performance Mode",
+    Tooltip = "Reduce graphics for better FPS",
+    Callback = function(state)
+        local lighting = game:GetService("Lighting")
+        if state then
+            settings().Rendering.QualityLevel = 1
+            lighting.GlobalShadows = false
+            lighting.FogEnd = 9e9
+            
+            for _, obj in pairs(game.Workspace:GetDescendants()) do
+                if obj:IsA("ParticleEmitter") or obj:IsA("Trail") then
+                    obj.Enabled = false
+                end
+                if obj:IsA("Explosion") then
+                    obj.BlastPressure = 1
+                    obj.BlastRadius = 1
+                end
+            end
+        else
+            settings().Rendering.QualityLevel = Enum.QualityLevel.Automatic
+            lighting.GlobalShadows = true
+        end
+    end
+})
+
+MiscSettingsSection:Button({
+    Text = "Anti-AFK",
+    Tooltip = "Prevent being kicked for idling",
+    Callback = function()
+        local vu = game:GetService("VirtualUser")
+        game:GetService("Players").LocalPlayer.Idled:connect(function()
+            vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            wait(1)
+            vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        end)
+        print("Anti-AFK enabled!")
+    end
+})
+
+MiscSettingsSection:Slider({
+    Text = "FOV Changer",
+    Default = 70,
+    Minimum = 30,
+    Maximum = 120,
+    Flag = "FOVSlider",
+    Callback = function(Value)
+        game.Workspace.CurrentCamera.FieldOfView = Value
+    end
+})
+
+-- Easter Egg Section (Bottom right)
+local EasterEggSection = Tabs.Settings:Section({Text = "???"})
+
+EasterEggSection:Button({
+    Text = "DO NOT PRESS",
+    Tooltip = "Seriously, don't do it...",
+    Callback = function()
+        print("FREE FORTNITE FEET")
+        
+        -- Screen shake effect
+        local Camera = game.Workspace.CurrentCamera
+        local Player = game.Players.LocalPlayer
+        local Character = Player.Character
+        
+        -- Intense screen shake
+        spawn(function()
+            for i = 1, 50 do
+                Camera.CFrame = Camera.CFrame * CFrame.Angles(
+                    math.rad(math.random(-5, 5)),
+                    math.rad(math.random(-5, 5)),
+                    math.rad(math.random(-5, 5))
+                )
+                wait(0.05)
+            end
+        end)
+        
+        -- Rainbow explosion on screen
+        local ScreenGui = Instance.new("ScreenGui")
+        ScreenGui.Parent = game:GetService("CoreGui")
+        ScreenGui.Name = "VortexEasterEgg"
+        
+        for i = 1, 20 do
+            local Frame = Instance.new("Frame")
+            Frame.Parent = ScreenGui
+            Frame.Size = UDim2.new(0, math.random(50, 200), 0, math.random(50, 200))
+            Frame.Position = UDim2.new(math.random(0, 100) / 100, 0, math.random(0, 100) / 100, 0)
+            Frame.BackgroundColor3 = Color3.fromHSV(math.random(), 1, 1)
+            Frame.BorderSizePixel = 0
+            Frame.BackgroundTransparency = 0.3
+            
+            spawn(function()
+                for j = 1, 30 do
+                    Frame.Rotation = Frame.Rotation + 10
+                    Frame.BackgroundColor3 = Color3.fromHSV(math.random(), 1, 1)
+                    wait(0.05)
+                end
+                Frame:Destroy()
+            end)
+        end
+        
+        -- Explosion text
+        local TextLabel = Instance.new("TextLabel")
+        TextLabel.Parent = ScreenGui
+        TextLabel.Size = UDim2.new(1, 0, 1, 0)
+        TextLabel.Position = UDim2.new(0, 0, 0, 0)
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.Text = "sup"
+        TextLabel.TextSize = 100
+        TextLabel.Font = Enum.Font.GothamBold
+        TextLabel.TextColor3 = Color3.fromRGB(255, 50, 255)
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        TextLabel.ZIndex = 10
+        
+        -- Make character spin
+        if Character and Character:FindFirstChild("HumanoidRootPart") then
+            local HRP = Character.HumanoidRootPart
+            spawn(function()
+                for i = 1, 36 do
+                    HRP.CFrame = HRP.CFrame * CFrame.Angles(0, math.rad(10), 0)
+                    wait(0.05)
+                end
+            end)
+        end
+        
+        -- Confetti particles
+        if Character and Character:FindFirstChild("HumanoidRootPart") then
+            local Attachment = Instance.new("Attachment")
+            Attachment.Parent = Character.HumanoidRootPart
+            
+            local Particle = Instance.new("ParticleEmitter")
+            Particle.Parent = Attachment
+            Particle.Texture = "rbxasset://textures/particles/smoke_main.dds"
+            Particle.Rate = 100
+            Particle.Lifetime = NumberRange.new(2, 3)
+            Particle.Speed = NumberRange.new(10, 20)
+            Particle.SpreadAngle = Vector2.new(180, 180)
+            Particle.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 0)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 255))
+            })
+            
+            wait(2.5)
+            Particle.Enabled = false
+            wait(3)
+            Attachment:Destroy()
+        end
+        
+        wait(2.5)
+        ScreenGui:Destroy()
+        
+        print("borinngg")
+    end
+})
